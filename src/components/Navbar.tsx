@@ -17,6 +17,26 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleLang }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    setMenuOpen(false);
+    
+    setTimeout(() => {
+      const targetId = href.replace('#', '');
+      const element = document.getElementById(targetId);
+      if (element) {
+        const navbarHeight = 80;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }, 10);
+  };
+
   const navLinks = [
     { label: t.nav.home, href: '#home' },
     { label: t.nav.services, href: '#services' },
@@ -38,7 +58,7 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleLang }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <a href="#home" className="flex items-center gap-2 group">
+          <a href="#home" onClick={(e) => handleNavClick(e, '#home')} className="flex items-center gap-2 group">
             <img src="/logo-black.png" alt="Siyaq Logo" className="w-26 h-16" />
           </a>
 
@@ -48,6 +68,7 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleLang }) => {
               <a
                 key={link.href}
                 href={link.href}
+                onClick={(e) => handleNavClick(e, link.href)}
                 className="text-sm font-medium text-gray-500 hover:text-black transition-colors duration-200"
               >
                 {link.label}
@@ -68,6 +89,7 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleLang }) => {
 
             <a
               href="#contact"
+              onClick={(e) => handleNavClick(e, '#contact')}
               className="px-6 py-2.5 bg-black text-white text-sm font-medium hover:bg-gray-900 transition-colors duration-200"
             >
               {t.nav.getStarted}
@@ -112,7 +134,7 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleLang }) => {
                   <a
                     key={link.href}
                     href={link.href}
-                    onClick={() => setMenuOpen(false)}
+                    onClick={(e) => handleNavClick(e, link.href)}
                     className="block px-4 py-3 text-sm font-medium text-gray-700 hover:text-black hover:bg-gray-50 transition-colors"
                   >
                     {link.label}
@@ -120,7 +142,7 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleLang }) => {
                 ))}
                 <a
                   href="#contact"
-                  onClick={() => setMenuOpen(false)}
+                  onClick={(e) => handleNavClick(e, '#contact')}
                   className="mt-4 mx-4 block text-center px-4 py-3 bg-black text-white text-sm font-medium"
                 >
                   {t.nav.getStarted}
